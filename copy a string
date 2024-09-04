@@ -1,0 +1,8 @@
+def copy_string_recursively(source, index=0):
+    if index == len(source):
+        return ""
+    return source[index] + copy_string_recursively(source, index + 1)
+
+original_string = "Hello, World!"
+copied_string = copy_string_recursively(original_string)
+print(copied_string)  # Output: Hello, World!
