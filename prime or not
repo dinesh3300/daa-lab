@@ -1,0 +1,14 @@
+def is_prime(n, divisor=None):
+    if n <= 1:
+        return False
+    if divisor is None:
+        divisor = n - 1
+    if divisor == 1:
+        return True
+    if n % divisor == 0:
+        return False
+    return is_prime(n, divisor - 1)
+
+# Example usage
+number = 7
+print(f"{number} is prime: {is_prime(number)}")
