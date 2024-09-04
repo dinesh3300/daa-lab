@@ -1,0 +1,6 @@
+def find_largest_with_max(arr):
+    return max(arr)
+
+array = [3, 1, 4, 1, 5, 9, 2, 6]
+largest_element = find_largest_with_max(array)
+print("The largest element is:", largest_element)
