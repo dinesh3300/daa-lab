@@ -1,0 +1,15 @@
+def can_break(s1, s2):
+    # Sort both strings
+    sorted_s1 = sorted(s1)
+    sorted_s2 = sorted(s2)
+    
+    # Check if sorted_s1 can break sorted_s2
+    def can_break_helper(a, b):
+        return all(x >= y for x, y in zip(a, b))
+    
+    return can_break_helper(sorted_s1, sorted_s2) or can_break_helper(sorted_s2, sorted_s1)
+
+# Example usage
+s1 = "abc"
+s2 = "cba"
+print(can_break(s1, s2))  # Output: True
