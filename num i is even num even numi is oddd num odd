@@ -1,0 +1,15 @@
+def sort_array_by_parity(nums):
+    odd_indices = [num for num in nums if num % 2 != 0]
+    even_indices = [num for num in nums if num % 2 == 0]
+    
+    result = []
+    for i in range(len(nums)):
+        if i % 2 == 0 and even_indices:
+            result.append(even_indices.pop(0))
+        elif i % 2 != 0 and odd_indices:
+            result.append(odd_indices.pop(0))
+    
+    return result
+
+nums = [4, 2, 5, 7]
+print(sort_array_by_parity(nums))  # Output could be [4, 5, 2, 7]
