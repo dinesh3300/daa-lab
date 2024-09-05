@@ -1,0 +1,9 @@
+def substitution_method(n):
+    if n <= 1:
+        return 1
+    else:
+        return 2 * substitution_method(n // 2) + n
+
+n = 10
+result = substitution_method(n)
+print(f"T({n}) = {result}")  # Output: T(n) = 2T(n/2) + n
