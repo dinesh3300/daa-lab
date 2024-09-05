@@ -1,0 +1,25 @@
+def max_sum_no_adjacent(nums, queries):
+    MOD = 10**9 + 7
+    dp = [0, 0] + [-1e9] * (len(nums) - 1)
+    
+    for i in range(2, len(nums) + 1):
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i - 1])
+    
+    total_sum = sum(nums)
+    result = 0
+    
+    for pos, x in queries:
+        total_sum += x - nums[pos]
+        nums[pos] = x
+        
+        for i in range(pos + 1, len(nums) + 1):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i - 1])
+        
+        result += dp[-1]
+    
+    return result % MOD
+
+# Example Usage
+nums = [3, 2, 5]
+queries = [[0, 4], [1, 2]]
+print(max_sum_no_adjacent(nums, queries))  # Output: 16
