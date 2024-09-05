@@ -1,0 +1,11 @@
+def max_subarray_sum(nums):
+    max_ending_here = max_so_far = nums[0]
+    
+    for num in nums[1:]:
+        max_ending_here = max(num, max_ending_here + num)
+        max_so_far = max(max_so_far, max_ending_here)
+    
+    return max_so_far
+
+nums = [1, -2, 3, 4, -1]
+print(max_subarray_sum(nums))  # Output: 7
