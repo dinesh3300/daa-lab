@@ -1,0 +1,9 @@
+def last_string_before_empty(s):
+    for char in range(ord('z'), ord('a') - 1, -1):
+        s = s.replace(chr(char), '', 1)
+    return s
+
+# Example
+s = "aabcbbca"
+result = last_string_before_empty(s)
+print(result)  # Output: "ba"
