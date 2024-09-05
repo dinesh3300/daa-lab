@@ -1,0 +1,17 @@
+def bubble_sort(arr):
+    """
+    Sort the array using the bubble sort algorithm.
+    
+    :param arr: List of elements to be sorted
+    :return: Sorted list of elements
+    """
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+
+unsorted_array = [64, 34, 25, 12, 22, 11, 90]
+sorted_array = bubble_sort(unsorted_array)
+print(f"Bubble Sort: Sorted array is {sorted_array}")
