@@ -1,0 +1,44 @@
+import math
+
+def distance(p1, p2):
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+
+def closest_pair(points):
+    if len(points) <= 3:
+        return brute_force(points)
+    
+    mid = len(points) // 2
+    mid_point = points[mid]
+    
+    dl = closest_pair(points[:mid])
+    dr = closest_pair(points[mid:])
+    
+    d = min(dl, dr)
+    
+    strip = [p for p in points if abs(p[0] - mid_point[0]) < d]
+    
+    return min(d, strip_closest(strip, d))
+
+def brute_force(points):
+    min_dist = float('inf')
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)):
+            min_dist = min(min_dist, distance(points[i], points[j]))
+    return min_dist
+
+def strip_closest(strip, d):
+    min_dist = d
+    strip.sort(key=lambda point: point[1])
+    
+    for i in range(len(strip)):
+        for j in range(i + 1, len(strip)):
+            if (strip[j][1] - strip[i][1]) < min_dist:
+                min_dist = min(min_dist, distance(strip[i], strip[j]))
+            else:
+                break
+    return min_dist
+
+# Example usage
+points = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]
+points.sort(key=lambda point: point[0])
+print("The closest distance is:", closest_pair(points))
