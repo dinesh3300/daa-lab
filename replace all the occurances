@@ -1,0 +1,21 @@
+def minimize_cost_basic(s: str) -> str:
+    result = []
+    char_count = {}
+    
+    for char in s:
+        if char == '?':
+            # Find the next character that minimizes cost
+            for replacement in 'abcdefghijklmnopqrstuvwxyz':
+                if char_count.get(replacement, 0) == 0:
+                    result.append(replacement)
+                    char_count[replacement] = char_count.get(replacement, 0) + 1
+                    break
+        else:
+            result.append(char)
+            char_count[char] = char_count.get(char, 0) + 1
+            
+    return ''.join(result)
+
+# Example usage
+s = "a?b?c??"
+print(minimize_cost_basic(s))  # Output: "aabccde" (or similar)
