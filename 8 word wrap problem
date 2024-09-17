@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_WORDS 10000
+#define MAX_LEN 100
+
+typedef struct {
+    char words[MAX_WORDS][MAX_LEN];
+    int size;
+} WordFilter;
+
+void WordFilter_init(WordFilter *wf, char *words[], int wordsSize) {
+    wf->size = wordsSize;
+    for (int i = 0; i < wordsSize; i++) {
+        strcpy(wf->words[i], words[i]);
+    }
+}
+
+int WordFilter_f(WordFilter *wf, char *pref, char *suff) {
+    int result = -1;
+    for (int i = 0; i < wf->size; i++) {
+        char *word = wf->words[i];
+        int len = strlen(word);
+        int prefLen = strlen(pref);
+        int suffLen = strlen(suff);
+
+        if (strncmp(word, pref, prefLen) == 0 && strcmp(word + len - suffLen, suff) == 
