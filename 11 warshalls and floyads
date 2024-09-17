@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define INF INT_MAX
+
+int findCity(int n, int edges[][3], int edgesSize, int distanceThreshold) {
+    int dist[n][n];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j) dist[i][j] = 0;
+            else dist[i][j] = INF;
+        }
+    }
+
+    for (int i = 0; i < edgesSize; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        int w = edges[i][2];
+        dist[u][v] = w;
+        dist[v][u] = w;
+    }
+
+    // Floyd-Warshall algorithm
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][k] < INF && dist[k][j] < INF) {
+                    dist[i][j] = (dist[i][j] < dist[i][k] + dist[k][j]) ? dist[i][j] : dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+
+    int resultCity = -1;
+    int minReachable = INF;
+
+    for (int i = 0; i < n; i++) {
+        int reachableCount = 0;
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] <= distanceThreshold) {
+                reachableCount++;
+            }
+        }
+        if (reachableCount <= minReachable) {
+            minReachable = reachableCount;
+            resultCity = i;
+        }
+    }
+
+    return resultCity;
+}
+
+int main() {
+    int edges1[][3] = {{0,1,3},{1,2,1},{1,3,4},{2,3,1}};
+    int edges2[][3] = {{0,1,2},{0,4,8},{1,2,3},{1,4,2},{2,3,1},{3,4,1}};
+
+    printf("%d\n", findCity(4, edges1, sizeof(edges1)/sizeof(edges1[0]), 4)); // Output: 3
+    printf("%d\n", findCity(5, edges2, sizeof(edges2)/sizeof(edges2[0]), 2)); // Output: 0
+
+    return 0;
+}
