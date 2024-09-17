@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int maxWeight(int* weights, int n, int max_capacity) {
+    int total_weight = 0;
+    for (int i = 0; i < n; i++) {
+        if (weights[i] <= max_capacity) {
+            max_capacity -= weights[i];
+            total_weight += weights[i];
+        }
+    }
+    return total_weight;
+}
+
+int main() {
+    int weights1[] = {10, 20, 30, 40, 50};
+    int max_capacity1 = 60;
+    printf("Maximum weight loaded: %d\n", maxWeight(weights1, sizeof(weights1)/sizeof(weights1[0]), max_capacity1));
+
+    int weights2[] = {5, 10, 15, 20, 25, 30};
+    int max_capacity2 = 50;
+    printf("Maximum weight loaded: %d\n", maxWeight(weights2, sizeof(weights2)/sizeof(weights2[0]), max_capacity2));
+
+    return 0;
+}
