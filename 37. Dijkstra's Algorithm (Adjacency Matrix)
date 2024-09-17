@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define INF INT_MAX
+
+void dijkstra(int graph[][5], int n, int source, int dist[]) {
+    int visited[n];
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+        visited[i] = 0;
+    }
+    dist[source] = 0;
+
+    for (int i = 0; i < n - 1; i++) {
+        int min = INF, u;
+        for (int j = 0; j < n; j++) {
+            if (!visited[j] && dist[j] < min) {
+                min = dist[j];
+                u = j;
+            }
+        }
+        visited[u] = 1;
+
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INF && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+}
+
+int main() {
+    int graph1[5][5] = {
+        {0, 10, 3, INF, INF},
+        {INF, 0, 1, 2, INF},
+        {INF, 4, 0, 8, 2},
+        {INF, INF, INF, 0, 7},
+        {INF, INF, INF, 9, 0}
+    };
+    int dist1[5];
+    dijkstra(graph1, 5, 0, dist1);
+    printf("Distances from source 0: ");
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", dist1[i]);
+    }
+    printf("\n");
+
+    int graph2[4][4] = {
+        {0, 5, INF, 10},
+        {INF, 0, 3, INF},
+        {INF, INF, 0, 1},
+        {INF, INF, INF, 0}
+    };
+    int dist2[4];
+    dijkstra(graph2, 4, 0, dist2);
+    printf("Distances from source 0: ");
+    for (int i = 0; i < 4; i++) {
+        printf("%d ", dist2[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
