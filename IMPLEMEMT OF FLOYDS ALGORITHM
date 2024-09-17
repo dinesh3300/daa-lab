@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define INF INT_MAX
+
+void floydWarshall(int graph[][4], int dist[][4], int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            dist[i][j] = graph[i][j];
+        }
+    }
+
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][k] < INF && dist[k][j] < INF) {
+                    if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+    }
+}
+
+void printMatrix(int matrix[][4], int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == INF)
+                printf("INF\t");
+            else
+                printf("%d\t", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int graph1[4][4] = { {0, 3, INF, INF}, 
+                         {INF, 0, 1, 4}, 
+                         {INF, INF, 0, 1}, 
+                         {INF, INF, INF, 0} };
+    int dist1[4][4];
+
+    floydWarshall(graph1, dist1, 4);
+    printf("Distance matrix after Floyd-Warshall:\n");
+    printMatrix(dist1, 4);
+
+    return 0;
+}
