@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int findPeakElement(int nums[], int left, int right) {
+    if (left == right) return left;
+
+    int mid = left + (right - left) / 2;
+
+    if (nums[mid] > nums[mid + 1]) {
+        return findPeakElement(nums, left, mid);
+    } else {
+        return findPeakElement(nums, mid + 1, right);
+    }
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 1};
+    int size = sizeof(nums) / sizeof(nums[0]);
+    printf("%d\n", findPeakElement(nums, 0, size - 1)); // Output: 2
+    return 0;
+}
