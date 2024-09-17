@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void combinationUtil(int arr[], int start, int end, int target, int temp[], int tempSize) {
+    if (target == 0) {
+        for (int i = 0; i < tempSize; i++)
+            printf("%d ", temp[i]);
+        printf("\n");
+        return;
+    }
+    for (int i = start; i <= end; i++) {
+        if (i > start && arr[i] == arr[i - 1]) continue; // Skip duplicates
+        if (target >= arr[i]) {
+            temp[tempSize] = arr[i];
+            combinationUtil(arr, i + 1, end, target - arr[i], temp, tempSize + 1);
+        }
+    }
+}
+
+void combinationSum2(int arr[], int n, int target) {
+    int* temp = (int*)malloc(target * sizeof(int));
+    qsort(arr, n, sizeof(int), (int (*)(const void*, const void*)) strcmp);
+    combinationUtil(arr, 0, n - 1, target, temp, 0);
+    free(temp);
+}
+
+int main() {
+    int arr[] = {10, 1, 2, 7, 6, 1, 5};
+    int target = 8;
+    int n = sizeof(arr) / sizeof(arr[0]);
+    combinationSum2(arr, n, target);
+    return 0;
+}
