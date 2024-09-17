@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct {
+    int x, y;
+} Point;
+
+typedef struct {
+    Point* points;
+    int size;
+    int capacity;
+} MinHeap;
+
+MinHeap* createMinHeap(int capacity) {
+    MinHeap* heap = (MinHeap*)malloc(sizeof(MinHeap));
+    heap->size = 0;
+    heap->capacity = capacity;
+    heap->points = (Point*)malloc(capacity * sizeof(Point));
+    return heap;
+}
+
+void swap(Point* a, Point* b) {
+    Point temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void heapify(MinHeap* heap, int index) {
+    int left = 2 * index + 1;
+    int right = 2 * index + 2;
+    int smallest = index;
+
+    if (left < heap->size && (heap->points[left].x * heap->points[left].x + heap->points[left].y * heap->points[left].y) < (heap->points[smallest].x * heap->points[smallest].x + heap->points[smallest].y * heap->points[smallest].y)) {
+        smallest = left;
+    }
+    if (right < heap->size && (heap->points[right].x * heap->points[right].x + heap->points[right].y * heap->points[right].y) < (heap->points[smallest].x * heap->points[smallest].x + heap->points[smallest].y * heap->points[smallest].y)) {
+        smallest = right;
+    }
+    if (smallest != index) {
+        swap(&heap->points[index], &heap->points[smallest]);
+        heapify(heap, smallest);
+    }
+}
+
+void insertMinHeap(MinHeap* heap, Point point) {
+    if (heap->size < heap->capacity) {
+        heap->points[heap->size++] = point;
+        int i = heap->size - 1;
+        while (i != 0 && (heap->points[i].x * heap->points[i].x + heap->points[i].y * heap->points[i].y) < (heap->points[(i - 1) / 2].x * heap->points[(i - 1) / 2].x + heap->points[(i - 1) / 2].y * heap->points[(i - 1) / 2].y)) {
+            swap(&heap->points[i], &heap->points[(i - 1) / 2]);
+            i = (i - 1) / 2;
+        }
+    } else if (heap->size > 0 && (heap->points[0].x * heap->points[0].x + heap->points[0].y * heap->points[0].y) > (point.x * point.x + point.y * point.y)) {
+        heap->points[0] = point;
+        heapify(heap, 0);
+    }
+}
+
+void printClosestPoints(Point* points, int size, int k) {
+    MinHeap* heap = createMinHeap(k);
+    for (int i = 0; i < size; i++) {
+        insertMinHeap(heap, points[i]);
+    }
+
+    printf("Closest points:\n");
+    for (int i = 0; i < k; i++) {
+        printf("[%d, %d]\n", heap->points[i].x, heap->points[i].y);
+    }
+
+    free(heap->points);
+    free(heap);
+}
+
+int main() {
+    Point points1[] = {{1, 3}, {-2, 2}, {5, 8}, {0, 1}};
+    int k1 = 2;
+    printClosestPoints(points1, sizeof(points1)/sizeof(points1[0]), k1);
+
+    Point points2[] = {{1, 3}, {-2, 2}};
+    int k2 = 1;
+    printClosestPoints(points2, sizeof(points2)/sizeof(points2[0]), k2);
+
+    Point points3[] = {{3, 3}, {5, -1}, {-2, 4}};
+    int k3 = 2;
+    printClosestPoints(points3, sizeof(points3)/sizeof(points3[0]), k3);
+
+    return 0;
+}
