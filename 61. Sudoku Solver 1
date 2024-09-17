@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define N 9
+
+bool isSafe(char board[N][N], int row, int col, char num) {
+    for (int x = 0; x < N; x++) {
+        if (board[row][x] == num || board[x][col] == num ||
+            board[row - row % 3 + x / 3][col - col % 3 + x % 3] == num) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool solveSudoku(char board[N][N], int row, int col) {
+    if (row == N - 1 && col == N)
+        return true;
+    if (col == N) {
+        row++;
+        col = 0;
+    }
+    if (board[row][col] != '.')
+        return solveSudoku(board, row, col + 1);
+
+    for (char num = '1'; num <= '9'; num++) {
+        if (isSafe(board, row, col, num)) {
+            board[row][col] = num;
+            if (solveSudoku(board, row, col + 1))
+                return true;
+        }
+        board[row][col] = '.';
+    }
+    return false;
+}
+
+void printBoard(char board[N][N]) {
+    for (int r = 0; r < N; r++) {
+        for (int d = 0; d < N; d++)
+            printf("%c ", board[r][d]);
+        printf("\n");
+    }
+}
+
+int main() {
+    char board[N][N] = {
+        {'5','3','.','.','7','.','.','.','.'},
+        {'6','.','.','1','9','5','.','.','.'},
+        {'.','9','8','.','.','.','.','6','.'},
+        {'8','.','.','.','6','.','.','.','3'},
+        {'4','.','.','8','.','3','.','.','1'},
+        {'7','.','.','.','2','.','.','.','6'},
+        {'.','6','.','.','.','.','2','8','.'},
+        {'.','.','.','4','1','9','.','.','5'},
+        {'.','.','.','.','8','.','.','7','9'}
+    };
+
+    if (solveSudoku(board, 0, 0))
+        printBoard(board);
+    else
+        printf("No solution exists\n");
+
+    return 0;
+}
