@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define V 4
+#define E 5
+
+typedef struct {
+    int u, v, w;
+} Edge;
+
+int find(int parent[], int i) {
+    if (parent[i] == i)
+        return i;
+    return find(parent, parent[i]);
+}
+
+void unionSet(int parent[], int rank[], int x, int y) {
+    int xroot = find(parent, x);
+    int yroot = find(parent, y);
+    if (rank[xroot] < rank[yroot])
+        parent[xroot] = yroot;
+    else if (rank[xroot] > rank[yroot])
+        parent[yroot] = xroot;
+    else {
+        parent[yroot] = xroot;
+        rank[xroot]++;
+    }
+}
+
+int compare(const void* a, const void* b) {
+    return ((Edge*)a)->w - ((Edge*)b)->w;
+}
+
+void kruskalMST(Edge edges[], int V) {
+    Edge result[V];
+    int parent[V];
+    int rank[V];
+    for (int i = 0; i < V; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+    qsort(edges, E, sizeof(edges[0]), compare);
+    int e = 0;
+    int i = 0;
+    while (e < V - 1) {
+        Edge next_edge = edges[i++];
+        int x = find(parent, next_edge.u);
+        int y = find(parent, next_edge.v);
+        if (x != y) {
+            result[e++] = next_edge;
+            unionSet(parent, rank, x, y);
+        }
+    }
+    printf("Edge \tWeight\n");
+    for (i = 0; i < e; i++)
+        printf("%d - %d \t%d \n", result[i].u, result[i].v, result[i].w);
+}
+
+int main() {
+    Edge edges[E] = {
+        {0, 1, 10},
+        {0, 2, 6},
+        {0, 3, 5},
+        {1, 3, 15},
+        {2, 3, 4}
+    };
+    kruskalMST(edges, V);
+    return 0;
+}
