@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX 100
+
+typedef struct {
+    int front, rear;
+    int queue[MAX];
+} Queue;
+
+Queue* createQueue() {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->front = 0;
+    q->rear = -1;
+    return q;
+}
+
+bool isEmpty(Queue* q) {
+    return q->rear < q->front;
+}
+
+void enqueue(Queue* q, int value) {
+    if (q->rear < MAX - 1) {
+        q->queue[++(q->rear)] = value;
+    }
+}
+
+int dequeue(Queue* q) {
+    if (isEmpty(q)) {
+        return -1;
+    }
+    return q->queue[(q->front)++];
+}
+
+void bfs(int graph[][MAX], int n, int start) {
+    bool visited[MAX] = { false };
+    Queue* q = createQueue();
+    visited[start] = true;
+    enqueue(q, start);
+
+    while (!isEmpty(q)) {
+        int vertex = dequeue(q);
+        printf("%d ", vertex);
+
+        for (int i = 0; i < n; i++) {
+            if (graph[vertex][i] && !visited[i]) {
+                visited[i] = true;
+                enqueue(q, i);
+            }
+        }
+    }
+    printf("\n");
+    free(q);
+}
+
+int main() {
+    int graph1[5][MAX] = {
+        {0, 1, 1, 1, 0},
+        {1, 0, 1, 0, 1},
+        {1, 1, 0, 1, 0},
+        {1, 0, 1, 0, 1},
+        {0, 1, 0, 1, 0}
+    };
+    printf("BFS traversal starting from vertex 0:\n");
+    bfs(graph1, 5, 0);
+
+    int graph2[4][MAX] = {
+        {0, 1, 0, 1},
+        {1, 0, 1, 0},
+        {0, 1, 0, 1},
+        {1, 0, 1, 0}
+    };
+    printf("BFS traversal starting from vertex 1:\n");
+    bfs(graph2, 4, 1);
+
+    return 0;
+}
