@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int start, end;
+} Interval;
+
+int compareIntervals(const void* a, const void* b) {
+    return ((Interval*)a)->end - ((Interval*)b)->end;
+}
+
+int maxNonOverlappingIntervals(Interval* intervals, int n) {
+    qsort(intervals, n, sizeof(Interval), compareIntervals);
+    int count = 1;
+    int lastEnd = intervals[0].end;
+
+    for (int i = 1; i < n; i++) {
+        if (intervals[i].start >= lastEnd) {
+            count++;
+            lastEnd = intervals[i].end;
+        }
+    }
+    return count;
+}
+
+int main() {
+    Interval intervals1[] = {
+        {1, 3},
+        {2, 5},
+        {4, 6},
+        {6, 8}
+    };
+    int n1 = sizeof(intervals1) / sizeof(intervals1[0]);
+    printf("Maximum number of non-overlapping intervals: %d\n", maxNonOverlappingIntervals(intervals1, n1));
+
+    Interval intervals2[] = {
+        {1, 4},
+        {2, 6},
+        {5, 7},
+        {8, 9}
+    };
+    int n2 = sizeof(intervals2) / sizeof(intervals2[0]);
+    printf("Maximum number of non-overlapping intervals: %d\n", maxNonOverlappingIntervals(intervals2, n2));
+
+    return 0;
+}
