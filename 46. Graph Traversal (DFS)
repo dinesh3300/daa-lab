@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX 100
+
+typedef struct {
+    bool* visited;
+    int* stack;
+    int top;
+    int size;
+} Stack;
+
+Stack* createStack(int size) {
+    Stack* s = (Stack*)malloc(sizeof(Stack));
+    s->visited = (bool*)calloc(size, sizeof(bool));
+    s->stack = (int*)malloc(size * sizeof(int));
+    s->top = -1;
+    s->size = size;
+    return s;
+}
+
+bool isStackEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(Stack* s, int value) {
+    s->stack[++(s->top)] = value;
+}
+
+int pop(Stack* s) {
+    if (isStackEmpty(s)) {
+        return -1;
+    }
+    return s->stack[(s->top)--];
+}
+
+void dfs(int graph[][MAX], int n, int start) {
+    Stack* s = createStack(n);
+    push(s, start);
+    s->visited[start] = true;
+
+    while (!isStackEmpty(s)) {
+        int vertex = pop(s);
+        printf("%d ", vertex);
+
+        for (int i = 0; i < n; i++) {
+            if (graph[vertex][i] && !s->visited[i]) {
+                s->visited[i] = true;
+                push(s, i);
+            }
+        }
+    }
+    printf("\n");
+    free(s->stack);
+    free(s->visited);
+    free(s);
+}
+
+int main() {
+    int graph1[5][MAX] = {
+        {0, 1, 1, 1, 0},
+        {1, 0, 1, 0, 1},
+        {1, 1, 0, 1, 0},
+        {1, 0, 1, 0, 1},
+        {0, 1, 0, 1, 0}
+    };
+    printf("DFS traversal starting from vertex 0:\n");
+    dfs(graph1, 5, 0);
+
+    int graph2[4][MAX] = {
+        {0, 1, 0, 1},
+        {1, 0, 1, 0},
+        {0, 1, 0, 1},
+        {1, 0, 1, 0}
+    };
+    printf("DFS traversal starting from vertex 1:\n");
+    dfs(graph2, 4, 1);
+
+    return 0;
+}
