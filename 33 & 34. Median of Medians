@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return (i + 1);
+}
+
+int medianOfMedians(int arr[], int low, int high, int k) {
+    if (low == high)
+        return arr[low];
+    
+    int pivotIndex = partition(arr, low, high);
+    
+    if (pivotIndex == k)
+        return arr[pivotIndex];
+    else if (pivotIndex < k)
+        return medianOfMedians(arr, pivotIndex + 1, high, k);
+    else
+        return medianOfMedians(arr, low, pivotIndex - 1, k);
+}
+
+int main() {
+    int arr1[] = {12, 3, 5, 7, 19};
+    int k1 = 2;
+    int n1 = sizeof(arr1) / sizeof(arr1[0]);
+    printf("k-th smallest element: %d\n", medianOfMedians(arr1, 0, n1 - 1, k1));
+
+    int arr2[] = {12, 3, 5, 7, 4, 19, 26};
+    int k2 = 3;
+    int n2 = sizeof(arr2) / sizeof(arr2[0]);
+    printf("k-th smallest element: %d\n", medianOfMedians(arr2, 0, n2 - 1, k2));
+
+    int arr3[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int k3 = 6;
+    int n3 = sizeof(arr3) / sizeof(arr3[0]);
+    printf("k-th smallest element: %d\n", medianOfMedians(arr3, 0, n3 - 1, k3));
+    
+    return 0;
+}
