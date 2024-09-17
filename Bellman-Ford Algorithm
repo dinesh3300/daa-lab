@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+
+#define MAX_NODES 100
+
+int graph[MAX_NODES][MAX_NODES];
+bool visited[MAX_NODES][MAX_NODES][2];
+
+int dfs(int mouse, int cat, int turn, int n) {
+    if (mouse == 0) return 1; // Mouse wins
+    if (cat == 0) return 2; // Cat wins
+    if (visited[mouse][cat][turn]) return 0; // Already visited state
+
+    visited[mouse][cat][turn] = true;
+
+    bool canMouseWin = false, canCatWin = false;
+
+    if (turn == 0) { // Mouse's turn
+        for (int i = 0; i < n; i++) {
+            if (graph[mouse][i] && dfs(i, cat, 1, n) == 1) {
+                canMouseWin = true;
+                break;
+            }
+        }
+        if (!canMouseWin) return 2;
+    } else { // Cat's turn
+        for (int i = 0; i < n; i++) {
+            if (graph[cat][i] && i != 0 && dfs(mouse, i, 0, n) == 2) {
+                canCatWin = true;
+                break;
+            }
+        }
+        if (!canCatWin) return 1;
+    }
+
+    return 0; // Draw
+}
+
+int catMouseGame(int graph[MAX_NODES][MAX_NODES], int n) {
+    memset(visited, false, sizeof(visited));
+    return dfs(1, 2, 0, n);
+}
+
+int main() {
+    int graph1[MAX_NODES][MAX_NODES] = {{0,1,0,0,0,1},{1,0,1,0,0,1},{0,1,0,1,0,0},{0,0,1,0,1,1},{0,0,0,1,0,0},{1,1,0,1,0,0}};
+    int graph2[MAX_NODES][MAX_NODES] = {{0,1,0,0},{1,0,0,1},{0,0,0,1},{0,1,1,0}};
+
+    printf("%d\n", catMouseGame(graph1, 6)); // Output: 0
+    printf("%d\n", catMouseGame(graph2, 4)); // Output: 1
+
+    return 0;
+}
