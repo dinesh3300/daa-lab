@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int countWays(int m, int n, int N, int i, int j) {
+    int dp[m][n][N+1];
+    for (int x = 0; x < m; x++)
+        for (int y = 0; y < n; y++)
+            for (int k = 0; k <= N; k++)
+                dp[x][y][k] = 0;
+
+    int directions[4][2] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+    int result = 0;
+
+    for (int k = 0; k <= N; k++) {
+        for (int x = 0; x < m; x++) {
+            for (int y = 0; y < n; y++) {
+                if (k == 0) {
+                    if (x == i && y == j) dp[x][y][k] = 0;
+                    else dp[x][y][k] = 1;
+                } else {
+                    dp[x][y][k] = 0;
+                    for (int d = 0; d < 4; d++) {
+                        int ni = x + directions[d][0];
+                        int nj = y + directions[d][1];
+                        if (ni >= 0 && ni < m && nj >= 0 && nj < n)
+                            dp[x][y][k] += dp[ni][nj][k-1];
+                    }
+                }
+            }
+        }
+    }
+
+    return dp[i][j][N];
+}
+
+int main() {
+    int m = 2, n = 2, N = 2, i = 0, j = 0;
+    printf("Number of ways: %d\n", countWays(m, n, N, i, j));
+    return 0;
+}
