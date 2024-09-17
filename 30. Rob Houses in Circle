@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int rob(int* nums, int numsSize) {
+    if (numsSize == 1) return nums[0];
+
+    int rob1(int* nums, int start, int end) {
+        int prev = 0, curr = 0;
+        for (int i = start; i < end; i++) {
+            int temp = curr;
+            curr = (prev + nums[i] > curr) ? prev + nums[i] : curr;
+            prev = temp;
+        }
+        return curr;
+    }
+
+    return (rob1(nums, 0, numsSize - 1) > rob1(nums, 1, numsSize)) ? rob1(nums, 0, numsSize - 1) : rob1(nums, 1, numsSize);
+}
+
+int main() {
+    int nums1[] = {2, 3, 2};
+    int nums2[] = {1, 2, 3, 1};
+    printf("Max money for nums1: %d\n", rob(nums1, sizeof(nums1) / sizeof(nums1[0])));
+    printf("Max money for nums2: %d\n", rob(nums2, sizeof(nums2) / sizeof(nums2[0])));
+    return 0;
+}
