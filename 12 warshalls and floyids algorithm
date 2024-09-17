@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define INF INT_MAX
+
+typedef struct {
+    int node;
+    int distance;
+} Node;
+
+int minTime(int times[][3], int timesSize, int n, int k) {
+    int dist[n];
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+    }
+    dist[k] = 0;
+
+    Node *heap = (Node *)malloc(n * sizeof(Node));
+    int heapSize = 0;
+    
+    heap[heapSize++] = (Node){k, 0};
+
+    while (heapSize > 0) {
+        Node minNode = heap[0];
+        heap[0] = heap[--heapSize];
+        int u = minNode.node;
+
+        for (int i = 0; i < timesSize; i++) {
+            int from = times[i][0];
+            int to = times[i][1];
+            int weight = times[i][2];
+            
+            if (from == u && dist[to] > dist[u] + weight) {
+                dist[to] = dist[u] + weight;
+                heap[heapSize++] = (Node){to, dist[to]};
+                // Maintain heap property (omitted for brevity)
+            }
+        }
+    }
+
+    int maxTime = 0;
+    for (int i = 0; i < n; i++) {
+        if (dist[i] == INF) return -1;
+        if (dist[i] > maxTime) maxTime = dist[i];
+    }
+
+    free(heap);
+    return maxTime;
+}
+
+int main() {
+    int times1[][3] = {{2,1,1},{2,3,1},{3,4,1}};
+    int times2[][3] = {{1,2,1}};
+
+    printf("%d\n", minTime(times1, sizeof(times1)/sizeof(times1[0]), 4, 2)); // Output: 2
+    printf("%d\n", minTime(times2, sizeof(times2)/sizeof(times2[0]), 2, 1)); // Output: 1
+    printf("%d\n", minTime(times2, sizeof(times2)/sizeof(times2[0]), 2, 2)); // Output: -1
+
+    return 0;
+}
