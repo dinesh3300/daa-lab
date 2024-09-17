@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct {
+    int u, v, w;
+} Edge;
+
+typedef struct {
+    int* dist;
+    int* prev;
+    int* visited;
+    int size;
+} Graph;
+
+Graph* createGraph(int n) {
+    Graph* g = (Graph*)malloc(sizeof(Graph));
+    g->size = n;
+    g->dist = (int*)malloc(n * sizeof(int));
+    g->prev = (int*)malloc(n * sizeof(int));
+    g->visited = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) {
+        g->dist[i] = INT_MAX;
+        g->prev[i] = -1;
+        g->visited[i] = 0;
+    }
+    return g;
+}
+
+void dijkstra(Graph* g, Edge* edges, int m, int source, int target) {
+    g->dist[source] = 0;
+
+    for (int i = 0; i < g->size - 1; i++) {
+        int min = INT_MAX, u;
+        for (int j = 0; j < g->size; j++) {
+            if (!g->visited[j] && g->dist[j] < min) {
+                min = g->dist[j];
+                u = j;
+            }
+        }
+        g->visited[u] = 1;
+
+        for (int e = 0; e < m; e++) {
+            if (edges[e].u == u && !g->visited[edges[e].v] && g->dist[u] != INT_MAX && g->dist[u] + edges[e].w < g->dist[edges[e].v]) {
+                g->dist[edges[e].v] = g->dist[u] + edges[e].w;
+                g->prev[edges[e].v] = u;
+            }
+        }
+    }
+
+    printf("Distance from %d to %d: %d\n", source, target, g->dist[target]);
+}
+
+int main() {
+    Edge edges1[] = {
+        {0, 1, 7}, {0, 2, 9}, {0, 5, 14},
+        {1, 2, 10}, {1, 3, 15},
+        {2, 3, 11}, {2, 5, 2},
+        {3, 4, 6}, {4, 5, 9}
+    };
+    int n1 = 6;
+    Graph* g1 = createGraph(n1);
+    dijkstra(g1, edges1, sizeof(edges1) / sizeof(edges1[0]), 0, 4);
+
+    Edge edges2[] = {
+        {0, 1, 10}, {0, 4, 3},
+        {1, 2, 2}, {1, 4, 4},
+        {2, 3, 9}, {3, 2, 7},
+        {4, 1, 1}, {4, 2, 8}, {4, 3, 2}
+    };
+    int n2 = 5;
+    Graph* g2 = createGraph(n2);
+    dijkstra(g2, edges2, sizeof(edges2) / sizeof(edges2[0]), 0, 3);
+
+    free(g1->dist);
+    free(g1->prev);
+    free(g1->visited);
+    free(g1);
+    free(g2->dist);
+    free(g2->prev);
+    free(g2->visited);
+    free(g2);
+
+    return 0;
+}
