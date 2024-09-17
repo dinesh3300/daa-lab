@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+
+void fullJustify(char *words[], int wordsSize, int maxWidth) {
+    int start = 0;
+    while (start < wordsSize) {
+        int end = start;
+        int lineLength = strlen(words[start]);
+        
+        while (end + 1 < wordsSize && lineLength + strlen(words[end + 1]) + 1 <= maxWidth) {
+            end++;
+            lineLength += strlen(words[end]) + 1;
+        }
+        
+        int spaces = maxWidth - lineLength + (end - start);
+        int numWords = end - start + 1;
+        int spaceBetween = numWords == 1 ? spaces : spaces / (numWords - 1);
+        int extraSpaces = numWords == 1 ? 0 : spaces % (numWords - 1);
+        
+        for (int i = start; i <= end; i++) {
+            printf("%s", words[i]);
+            if (i < end) {
+                int currentSpaces = spaceBetween + (extraSpaces-- > 0 ? 1 : 0);
+                for (int j = 0; j < currentSpaces; j++) {
+                    printf(" ");
+                }
+            }
+        }
+        for (int i = 0; i < maxWidth - (lineLength + (numWords - 1)); i++) {
+            printf(" ");
+        }
+        
+        printf("\n");
+        start = end + 1;
+    }
+}
+
+int main() {
+    char *words[] = {"This", "is", "an", "example", "of", "text", "justification."};
+    int wordsSize = sizeof(words) / sizeof(words[0]);
+    int maxWidth = 16;
+    fullJustify(words, wordsSize, maxWidth);
+    return 0;
+}
