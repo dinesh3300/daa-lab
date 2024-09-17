@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int minContainers(int* weights, int n, int max_capacity) {
+    int count = 0;
+    int current_capacity = max_capacity;
+
+    for (int i = 0; i < n; i++) {
+        if (weights[i] > current_capacity) {
+            count++;
+            current_capacity = max_capacity;
+        }
+        current_capacity -= weights[i];
+    }
+    if (current_capacity < max_capacity) {
+        count++;
+    }
+    return count;
+}
+
+int main() {
+    int weights1[] = {5, 10, 15, 20, 25, 30, 35};
+    int max_capacity1 = 50;
+    printf("Minimum number of containers: %d\n", minContainers(weights1, sizeof(weights1)/sizeof(weights1[0]), max_capacity1));
+
+    int weights2[] = {10, 20, 30, 40, 50, 60, 70, 80};
+    int max_capacity2 = 100;
+    printf("Minimum number of containers: %d\n", minContainers(weights2, sizeof(weights2)/sizeof(weights2[0]), max_capacity2));
+
+    return 0;
+}
