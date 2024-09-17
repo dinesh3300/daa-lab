@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    char ch;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* buildHuffmanTree(char* characters, int* frequencies, int n) {
+    // This is a placeholder. The actual implementation would construct a Huffman tree
+    return NULL;
+}
+
+void decodeHuffman(Node* root, char* encoded_string) {
+    Node* current = root;
+    while (*encoded_string) {
+        if (*encoded_string == '0') {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+        if (current->left == NULL && current->right == NULL) {
+            printf("%c", current->ch);
+            current = root;
+        }
+        encoded_string++;
+    }
+}
+
+int main() {
+    char characters1[] = {'a', 'b', 'c', 'd'};
+    int frequencies1[] = {5, 9, 12, 13};
+    char encoded_string1[] = "1101100111110";
+    Node* root1 = buildHuffmanTree(characters1, frequencies1, sizeof(characters1) / sizeof(characters1[0]));
+    decodeHuffman(root1, encoded_string1);
+
+    char characters2[] = {'f', 'e', 'd', 'c', 'b', 'a'};
+    int frequencies2[] = {5, 9, 12, 13, 16, 45};
+    char encoded_string2[] = "110011011100101111001011";
+    Node* root2 = buildHuffmanTree(characters2, frequencies2, sizeof(characters2) / sizeof(characters2[0]));
+    decodeHuffman(root2, encoded_string2);
+
+    return 0;
+}
