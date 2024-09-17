@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+void meetInTheMiddle(int arr[], int left[], int right[], int n, int target, int *closestSum) {
+    int subsetSize = 1 << (n / 2);
+    int *leftSums = (int *)malloc(subsetSize * sizeof(int));
+    int *rightSums = (int *)malloc(subsetSize * sizeof(int));
+
+    for (int i = 0; i < subsetSize; i++) {
+        leftSums[i] = 0;
+        for (int j = 0; j < n / 2; j++) {
+            if (i & (1 << j))
+                leftSums[i] += arr[j];
+        }
+    }
+
+    for (int i = 0; i < subsetSize; i++) {
+        rightSums[i] = 0;
+        for (int j = 0; j < n - n / 2; j++) {
+            if (i & (1 << j))
+                rightSums[i] += arr[j + n / 2];
+        }
+    }
+
+    int minDiff = INT_MAX;
+    for (int i = 0; i < subsetSize; i++) {
+        for (int j = 0; j < subsetSize; j++) {
+            int sum = leftSums[i] + rightSums[j];
+            int diff = abs(sum
