@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
+
+typedef struct {
+    int node;
+    double prob;
+} Node;
+
+int compare(const void *a, const void *b) {
+    double probA = ((Node *)a)->prob;
+    double probB = ((Node *)b)->prob;
+    return (probB > probA) - (probA > probB);
+}
+
+double maxProbability(int n, int edges[][2], double succProb[], int edgesSize, int start, int end) {
+    double graph[n][n];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            graph[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < edgesSize; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        double prob = succProb[i];
+        graph[u][v] = prob;
+        graph[v][u] = prob;
+    }
+
+    double dist[n];
+    for (int i = 0; i < n; i++) {
+        dist[i] = 0;
+    }
+    dist[start] = 1;
+
+    Node nodes[n];
+    for (int i = 0; i < n; i++) {
+        nodes[i].node = i;
+        nodes[i].prob = dist[i];
+    }
+
+    qsort(nodes, n, sizeof(Node), compare);
+
+    while (nodes[0].prob > 0) {
+        int u = nodes[0].node;
+        if (u == end) return dist[end];
+
+        for (int v = 0; v < n; v++) {
+            if (graph[u][v] > 0 && dist[v] < dist[u] * graph[u][v]) {
+                dist[v] = dist[u] * graph[u][v];
+                nodes[v].prob = dist[v];
+                qsort(nodes, n, sizeof(Node), compare);
+            }
+        }
+    }
+
+    return 0;
+}
+
+int main() {
+    int edges1[][2] = {{0,1},{1,2},{0,2}};
+    double succProb1[] = {0.5,0.5,0.2};
+    int edges2[][2] = {{0,1},{1,2},{0,2}};
+    double succProb2[] = {0.5,0.5,0.3};
+
+    printf("%f\n", maxProbability(3, edges1, succProb1, 3, 0, 2)); // Output: 0.25000
+    printf("%f\n", maxProbability(3, edges2, succProb2, 3, 0, 2)); // Output: 0.30000
+
+    return 0;
+}
