@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+bool wordBreak(char *s, char *wordDict[], int wordDictSize) {
+    bool dp[strlen(s) + 1];
+    dp[0] = true;
+    
+    for (int i = 1; i <= strlen(s); i++) {
+        dp[i] = false;
+        for (int j = 0; j < i; j++) {
+            if (dp[j]) {
+                for (int k = 0; k < wordDictSize; k++) {
+                    int wordLen = strlen(wordDict[k]);
+                    if (i - j >= wordLen && strncmp(s + j, wordDict[k], wordLen) == 0) {
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    return dp[strlen(s)];
+}
+
+int main() {
+    char s[] = "leetcode";
+    char *wordDict[] = {"leet", "code"};
+    printf("%d\n", wordBreak(s, wordDict, sizeof(wordDict) / sizeof(wordDict[0]))); // Output: 1 (true)
+    return 0;
+}
