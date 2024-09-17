@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int longestCommonSubsequence(char* X, char* Y, int m, int n) {
+    int** dp = (int**)malloc((m + 1) * sizeof(int*));
+    for (int i = 0; i <= m; i++) {
+        dp[i] = (int*)malloc((n + 1) * sizeof(int));
+    }
+
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == 0 || j == 0) {
+                dp[i][j] = 0;
+            } else if (X[i - 1] == Y[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    int result = dp[m][n];
+    for (int i = 0; i <= m; i++) {
+        free(dp[i]);
+    }
+    free(dp);
+    return result;
+}
+
+int main() {
+    char X1[] = "AGGTAB";
+    char Y1[] = "GXTXAYB";
+    int m1 = sizeof(X1) - 1;
+    int n1 = sizeof(Y1) - 1;
+    printf("Length of LCS: %d\n", longestCommonSubsequence(X1, Y1, m1, n1));
+
+    char X2[] = "ABCBDAB";
+    char Y2[] = "BDCAB";
+    int m2 = sizeof(X2) - 1;
+    int n2 = sizeof(Y2) - 1;
+    printf("Length of LCS: %d\n", longestCommonSubsequence(X2, Y2, m2, n2));
+
+    return 0;
+}
